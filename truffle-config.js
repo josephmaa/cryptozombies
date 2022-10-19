@@ -1,3 +1,6 @@
+const HDWalletProvider = require('truffle-hdwallet-provider')
+const mnemonic = "wisdom zebra force demand clown remove sugar manage plunge tragic idle jeans";
+const INFURA_KEY = "e7c14cb8008542b69c3f004a88635626";
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -43,8 +46,8 @@ module.exports = {
     //
      development: {
       host: "127.0.0.1",     // Localhost (default: none)
-      port: 8546,            // Standard Ethereum port (default: none)
-      network_id: 5777,       // Any network (default: none)
+      port: 7545,            // Standard Ethereum port (default: none)
+      network_id: "*",       // Any network (default: none)
     },
     // Another network with more advanced options...
     // advanced: {
@@ -71,9 +74,17 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
-    rpc: {
-      host: "127.0.0.1",
-      port: 8545
+    goerli: {
+      provider: () => {
+        return new HDWalletProvider(mnemonic, 'https://goerli.infura.io/v3/' + INFURA_KEY)
+      },
+      from: "0x9f53bf186436E8A0f1c00Edc467a4be106634E0D",
+      network_id: '5', // eslint-disable-line camelcase
+      gas: 4465030,
+      gasPrice: 22190678008,
+      confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
+       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true 
     }
   },
 

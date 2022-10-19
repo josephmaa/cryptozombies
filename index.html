@@ -10,15 +10,58 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
   <script language="javascript" type="text/javascript" src="cryptozombies_abi.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+
+
 </head>
 
 <body>
-  <div id="txStatus"></div>
-  <div id="zombies"></div>
 
-  <button class="showZombieButton">Show Zombies</button>
-  <button class="createzombieButton">Create Zombie</button>
-  <button class="levelupButton">Level Up</button>
+      <!-- Header -->
+        <header id="header">
+          <a href="index.html" class="logo"><strong>CryptoZombies</strong> <span>Joseph Maa</span></a>
+          <nav>
+            <a href="#menu">Menu</a>
+          </nav>
+        </header>
+
+      <!-- Menu -->
+        <nav id="menu">
+          <ul class="links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="landing.html">Landing</a></li>
+            <li><a href="generic.html">Generic</a></li>
+            <li><a href="elements.html">Elements</a></li>
+          </ul>
+          <ul class="actions stacked">
+            <li><a href="#" class="button primary fit">Get Started</a></li>
+            <li><a href="#" class="button fit">Log In</a></li>
+          </ul>
+        </nav>
+
+      <br>
+      <br>
+
+      <!-- Main -->
+        <div id="main" class="alt">
+
+          <!-- One -->
+            <section id="one">
+              <div class="inner">
+                <img id="qiqi" src="assets/fallen.webp" />
+                <br>
+
+                <button class="showZombieButton">Show Zombies</button>
+                <button class="createzombieButton">Create Zombie</button>
+                <button class="levelupButton">Level Up</button>
+                <br>
+                <br>
+
+                <div id="txStatus"></div>
+                <div id="zombies"></div>
+              </div>
+            </section>
+        </div>
 
   <script>
 
@@ -30,22 +73,12 @@
 
     function startApp() {
 	
-      //ZombieOwnership contract address
-      var cryptoZombiesAddress = "0xC08d276D3022F1E9E1e99eBAa6410fE4FcbEcB8f";
+      //ZombieOwnership contract address for Ganache
+      // var cryptoZombiesAddress = "0xC08d276D3022F1E9E1e99eBAa6410fE4FcbEcB8f";
+      //ZombieOwnership contract address for Goerli
+      var cryptoZombiesAddress = "0x424c12798Ea43935133E5c7ddda5910d2F02E7e7";
 
       cryptoZombies = new web3.eth.Contract(cryptoZombiesABI, cryptoZombiesAddress);
-
-
- //the following code from Lesson 6, chapter 5 is obsolete
- //     var accountInterval = setInterval(function () {
-
-  //      if (web3.eth.accounts[0] !== userAccount) {
-          //userAccount = web3.eth.accounts[0];
-
-     //     getZombiesByOwner(userAccount)
-      //      .then(displayZombies);
-      //  }
-     // }, 100);
 
       cryptoZombies.events.Transfer({ filter: { _to: userAccount } })
         .on("data", function (event) {
@@ -55,6 +88,7 @@
     }
 
     function displayZombies(ids) {
+      console.log("displaying zombies");
       $("#zombies").empty();
       for (id of ids) {
 
@@ -78,8 +112,6 @@
     }
 
     function createRandomZombie(name) {
-
-
       $("#txStatus").text("Creating new zombie on the blockchain. This may take a while...");
 
       return cryptoZombies.methods.createRandomZombie(name)
@@ -93,6 +125,24 @@
 
           $("#txStatus").text(error);
         });
+    }
+
+    function pictureChange(text)
+    {
+      var qiqi = document.getElementById("qiqi");
+
+      if (text == "show") {
+        qiqi.src = "assets/fallen.webp";
+      }
+      else if (text == "create") {
+        qiqi.src = "assets/create_zombie.gif";
+      }
+      else {
+        qiqi.src = "assets/level_up.gif";
+      }
+
+      qiqi.style.height = "500px";
+      qiqi.style.width = "500px";
     }
 
     function feedOnKitty(zombieId, kittyId) {
@@ -158,21 +208,6 @@
         console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }
    });
- 
-   //the following code from Lesson 6, chapter 2 is obsolete
-   //metamask no longer inject web3 since early 2021
-   //window.addEventListener('load', function () {
-
-  //    if (typeof web3 !== 'undefined') {
-   //     web3js = new Web3(web3.currentProvider);
-   //   } else {
-
-    //  }
-
-
-    //  startApp()
-
-  //  }) 
 
    ethereum.on('accountsChanged', (accounts) => {
        window.location.reload();
@@ -184,17 +219,19 @@
 
  
     createzombieButton.addEventListener('click', () => {
+      pictureChange("create");
       createRandomZombie(userAccount);
-
     });
 
     showZombieButton.addEventListener('click', () => {
+      pictureChange("show");
       getZombiesByOwner(userAccount)
             .then(displayZombies);
 
     });
 
     levelupButton.addEventListener('click', () => {
+      pictureChange("level");
       getZombiesByOwner(userAccount)
             .then(levelUp);
 
@@ -203,6 +240,16 @@
 
 
   </script>
+
+  <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
 </body>
 
 </html>
